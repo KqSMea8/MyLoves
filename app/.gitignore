@@ -1,0 +1,9 @@
+/build
+/.externalNativeBuild
+*.iml
+./gradle
+./build
+/.idea
+
+
+
