@@ -12,15 +12,18 @@
         android:name=".MyApp"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".UI.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="landscape">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <service android:name=".services.TaskStatusObserverService" />
+        <activity android:name=".UI.PlayActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

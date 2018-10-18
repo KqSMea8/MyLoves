@@ -1,48 +1,26 @@
-package com.leox.self.myloves
+package com.leox.self.myloves.UI
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.*
-import android.support.v7.app.AppCompatActivity
-import android.view.View
+import android.os.Build
+import android.os.Bundle
+import android.os.PersistableBundle
 import cn.jzvd.JZDataSource
 import cn.jzvd.Jzvd
 import cn.jzvd.JzvdStd
 import com.bumptech.glide.Glide
+import com.leox.self.myloves.Downloader
+import com.leox.self.myloves.R
 import com.leox.self.myloves.services.ProgressListener
 import com.leox.self.myloves.services.TaskStatusObserverService
-import com.leox.self.myloves.utils.DataConvertUtils.convertFileSize
-import com.xunlei.downloadlib.XLTaskHelper
-import kotlinx.android.synthetic.main.activity_main.*
+import com.leox.self.myloves.utils.DataConvertUtils
+import kotlinx.android.synthetic.main.activity_play.*
 
-class MainActivity : AppCompatActivity() {
-
-    private val mHandler = @SuppressLint("HandlerLeak")
-    object : Handler() {
-        override fun handleMessage(msg: Message?) {
-            super.handleMessage(msg)
-            when (msg?.what) {
-                2011 -> {
-                    val taskInfo = XLTaskHelper.instance(applicationContext).getTaskInfo(msg.obj as Long)
-
-                    btnPlayDownLoadFile.visibility = if (taskInfo.mDownloadSize == taskInfo.mFileSize) {
-                        View.VISIBLE
-                    } else {
-                        View.INVISIBLE
-                    }
-                    sendMessageDelayed(obtainMessage(msg.what, msg.obj), 1000)
-                }
-                else -> {
-                }
-            }
-        }
-    }
+class PlayActivity : BaseActivity(){
     var taskId: Long = 0L
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        setContentView(R.layout.activity_play)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && PackageManager.PERMISSION_GRANTED != checkSelfPermission(Manifest.permission.READ_PHONE_STATE)) {
             requestPermissions(Array<String>(1, init = {
@@ -64,17 +42,16 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onProgress(taskId: Long, downloaded: Long, sum: Long) {
-                if (taskId == this@MainActivity.taskId) {
+                if (taskId == this@PlayActivity.taskId) {
                     runOnUiThread {
-                        tvDownloadStatus.text = tvDownloadStatus.text.subSequence(0, tvDownloadStatus.text.indexOf(":", 0, true) + 1).toString() + convertFileSize(downloaded)
-                        tvFileSize.text = tvFileSize.text.subSequence(0, tvFileSize.text.indexOf(":") + 1).toString() + convertFileSize(sum)
+                        tvDownloadStatus.text = tvDownloadStatus.text.subSequence(0, tvDownloadStatus.text.indexOf(":", 0, true) + 1).toString() + DataConvertUtils.convertFileSize(downloaded)
+                        tvFileSize.text = tvFileSize.text.subSequence(0, tvFileSize.text.indexOf(":") + 1).toString() + DataConvertUtils.convertFileSize(sum)
                     }
                 }
             }
         })
         playVideo(Downloader.obtainPlayUrl(url))
     }
-
     private fun playVideo(obtainPlayUrl: String) {
         val jzDataSource = JZDataSource(obtainPlayUrl)
         video_std.setUp(jzDataSource, JzvdStd.SCREEN_WINDOW_NORMAL)
