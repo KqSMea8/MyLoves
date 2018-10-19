@@ -76,9 +76,8 @@
         android:fastScrollEnabled="true"
         android:fadingEdge="none"
         android:fadingEdgeLength="10dp"
-        android:stackFromBottom="true"
+        android:stackFromBottom="false"
         android:transcriptMode="alwaysScroll"
         android:drawSelectorOnTop="false"
-        android:gravity="left|top"
         android:layout_height="150dp"/>
 </LinearLayout>
