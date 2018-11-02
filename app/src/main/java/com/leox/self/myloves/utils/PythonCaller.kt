@@ -41,7 +41,7 @@ object PythonCaller {
             interpreter.execfile(realPath)
             val func = interpreter.get(funcName,
                     PyFunction::class.java)
-            val pyobj = func.__call__(args)
+            val pyobj = (func as PyFunction).__call__(args)
         }
     }
 

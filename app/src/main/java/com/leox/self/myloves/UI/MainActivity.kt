@@ -15,7 +15,6 @@ import com.leox.self.myloves.utils.PythonCaller
 import com.leox.self.myloves.utils.SpUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_website.view.*
-import java.io.File
 
 
 class MainActivity : BaseActivity() {
@@ -70,7 +69,7 @@ class MainActivity : BaseActivity() {
         val collectionItem = params[0] as CollectionItem
         Toast.makeText(this, "click item" + collectionItem.title, Toast.LENGTH_SHORT).show()
         if (collectionItem.id == 1) {
-            val url = "bilibilismail.py"
+            val url = "test.py"
             PythonCaller.callPythonFileFunc(url, "collection")
         }
         onResultBack("")
