@@ -4,7 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.util.Log
 import cn.jzvd.JZDataSource
 import cn.jzvd.Jzvd
 import cn.jzvd.JzvdStd
@@ -18,8 +18,8 @@ import kotlinx.android.synthetic.main.activity_play.*
 
 class PlayActivity : BaseActivity(){
     var taskId: Long = 0L
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && PackageManager.PERMISSION_GRANTED != checkSelfPermission(Manifest.permission.READ_PHONE_STATE)) {
@@ -27,9 +27,10 @@ class PlayActivity : BaseActivity(){
                 Manifest.permission.READ_PHONE_STATE
             }), 2012)
         }
-        val url = "ed2k://|file|%E4%B8%AD%E9%97%B4%E4%BA%BA%E5%85%88%E7%94%9F.Mr.Inbetween.S01E04.720p.Classic%E5%AD%97%E5%B9%95%E7%BB%84.mp4|335391783|48f7d147dafdb4d7e3c4eba481556ef3|h=hvc6eic66benmqkkved6rdyd5tqaqxxk|/"
+        val url = intent.getStringExtra("url")
+        Log.i(this.javaClass.simpleName,url)
         taskId = Downloader.addTask(url)
-        Downloader.addTask("ed2k://|file|%E4%B8%AD%E9%97%B4%E4%BA%BA%E5%85%88%E7%94%9F.mr.inbetween.s01e06.END.720p.Classic%E5%AD%97%E5%B9%95%E7%BB%84.mp4|231854269|51834406dadbbc709cec27ea178f65df|h=ey33thng43chunohvgvhz2tthojz4jyp|/")
+       // Downloader.addTask(url)
         TaskStatusObserverService.addListener(object : ProgressListener {
             override fun onStart(taskId: Long, downloaded: Long, sum: Long) {
 

@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'com.chaquo.python'
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -19,7 +21,40 @@ android {
             }
         }
         ndk{
-            abiFilters "armeabi"
+            abiFilters "armeabi-v7a"
+        }
+        python {
+            version "2.7.15"
+            buildPython "py -2.7"
+            buildPython "D:\\Python27\\python.exe"
+//            // Android UI demo
+//            pip {
+//                install "Pygments==2.2.0"   // Also used in Java API demo
+//            }
+//            staticProxy "chaquopy.demo.ui_demo"
+
+            // Python unit tests
+            pip {
+                install "MarkupSafe==1.0"
+                install "certifi==2018.01.18"  // This is in the default extractPackages list.
+                install "requests"
+                install "bs4"
+                install "lxml"
+//                install "threading"
+//                install "Queue"
+//                install "multiprocessing"
+//                install "sqlite3"
+            }
+//            staticProxy("chaquopy.test.static_proxy.basic", "chaquopy.test.static_proxy.header",
+//                    "chaquopy.test.static_proxy.method")
+        }
+
+        sourceSets {
+            main {
+                python {
+                    srcDir "src/main/python"
+                }
+            }
         }
     }
     buildTypes {

@@ -1,21 +1,23 @@
 package com.leox.self.myloves.UI
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.Toast
+import com.chaquo.python.Python
 import com.google.gson.Gson
 import com.leox.self.myloves.R
 import com.leox.self.myloves.data.CollectionItem
 import com.leox.self.myloves.data.CollectionList
-import com.leox.self.myloves.utils.PythonCaller
+import com.leox.self.myloves.db.TableDytt
 import com.leox.self.myloves.utils.SpUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_website.view.*
-import java.io.File
 
 
 class MainActivity : BaseActivity() {
@@ -65,19 +67,18 @@ class MainActivity : BaseActivity() {
         }
     }
 
-
     override fun requestData(params: List<Any>) {
-        val collectionItem = params[0] as CollectionItem
-        Toast.makeText(this, "click item" + collectionItem.title, Toast.LENGTH_SHORT).show()
-        if (collectionItem.id == 1) {
-            val url = "bilibilismail.py"
-            PythonCaller.callPythonFileFunc(url, "collection")
-        }
-        onResultBack("")
+        val module = Python.getInstance().getModule("com.leox.python.dytt8.main")
+        val callAttr = module.callAttr("startSpider")
+        Log.i("requestData",callAttr.toString())
+        onResultBack("dytt.db")
     }
 
-
     override fun onResultBack(resultData: Any) {
+        val movieList = TableDytt.getMovieList(2, 0)
+            val playIntent = Intent(this@MainActivity, PlayActivity::class.java)
+            playIntent.putExtra("url", movieList[0].ftpUrl)
+            this@MainActivity.startActivity(playIntent)
     }
 
     override fun onFailed(e: Exception?) {
