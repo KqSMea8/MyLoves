@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding=utf-8
+# coding=utf-8
 
 '''
 @Desc
@@ -16,27 +16,25 @@ from RequestModel import RequestModel
 
 
 class dytt_Lastest(object):
-
     # 获取爬虫程序抓取入口
     breakoutUrl = 'http://www.dytt8.net/html/gndy/dyzz/index.html'
 
     def __init__(self, sum):
         self.sum = sum
 
-
     # 获取【最新电影】有多少个页面
     # 截止到2017-08-08, 最新电影一共才有 164 个页面
     @classmethod
     def getMaxsize(cls):
-        response = requests.get(cls.breakoutUrl, headers=RequestModel.getHeaders(), proxies=RequestModel.getProxies(), timeout=3)
+        response = requests.get(cls.breakoutUrl, headers=RequestModel.getHeaders(),
+                                proxies=RequestModel.getProxies(), timeout=3, verify=False)
         # 需将电影天堂的页面的编码改为 GBK, 不然会出现乱码的情况
         response.encoding = 'GBK'
 
         selector = etree.HTML(response.text)
         # 提取信息
         optionList = selector.xpath("//select[@name='sldd']/text()")
-        return len(optionList) - 1   # 因首页重复, 所以要减1
-
+        return len(optionList) - 1  # 因首页重复, 所以要减1
 
     def getPageUrlList(self):
         '''
@@ -52,7 +50,6 @@ class dytt_Lastest(object):
         for t in templist:
             print('request url is ###   ' + t + '    ###')
         return templist
-
 
     @classmethod
     def getMoivePageUrlList(cls, html):
@@ -114,7 +111,8 @@ class dytt_Lastest(object):
             'placard': '',
             'screenshot': '',
             'ftpurl': '',
-            'dytt8_url': ''
+            'dytt8_url': '',
+            'desc': 'test'
         }
 
         selector = etree.HTML(html)
@@ -133,15 +131,18 @@ class dytt_Lastest(object):
             content = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/td/div/text()")
 
         if not len(content):
-            content = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/div/td/p/font/text()")
+            content = selector.xpath(
+                "//div[@class='co_content8']/ul/tr/td/div/div/td/p/font/text()")
             if len(content) < 5:
                 content = selector.xpath("//div[@class='co_content8']/ul/tr/td/p/font/text()")
 
         if not len(content):
-            content = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/div/td/p/span/text()")
+            content = selector.xpath(
+                "//div[@class='co_content8']/ul/tr/td/div/div/td/p/span/text()")
 
         if not len(content):
-            content = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/div/td/div/span/text()")
+            content = selector.xpath(
+                "//div[@class='co_content8']/ul/tr/td/div/div/td/div/span/text()")
 
         if not len(content):
             content = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/div/td/font/text()")
@@ -170,57 +171,60 @@ class dytt_Lastest(object):
         actor = ''
 
         for each in content:
-            if each[0:5] == '◎译\u3000\u3000名':
+            if each[0:5] == u'◎译　　名':
                 # 译名 ◎译\u3000\u3000名\u3000  一共占居6位
                 contentDir['trans_name'] = each[6: len(each)]
-            elif each[0:5] == '◎片\u3000\u3000名':
+            elif each[0:5] == u'◎片　　名':
                 # 片名
                 contentDir['name'] = each[6: len(each)]
-            elif each[0:5] == '◎年\u3000\u3000代':
+            elif each[0:5] == u'◎年　　代':
                 # 年份
                 contentDir['decade'] = each[6: len(each)]
-            elif each[0:5] == '◎产\u3000\u3000地':
+            elif each[0:5] == u'◎产　　地':
                 # 产地
                 contentDir['conutry'] = each[6: len(each)]
-            elif each[0:5] == '◎类\u3000\u3000别':
+            elif each[0:5] == u'◎类　　别':
                 # 类别
                 contentDir['level'] = each[6: len(each)]
-            elif each[0:5] == '◎语\u3000\u3000言':
+            elif each[0:5] == u'◎语　　言':
                 # 语言
                 contentDir['language'] = each[6: len(each)]
-            elif each[0:5] == '◎字\u3000\u3000幕':
+            elif each[0:5] == u'◎字　　幕':
                 # 字幕
                 contentDir['subtitles'] = each[6: len(each)]
-            elif each[0:5] == '◎上映日期':
+            elif each[0:5] == u'◎上映日期':
                 # 上映日期
                 contentDir['publish'] = each[6: len(each)]
-            elif each[0:7] == '◎IMDb评分':
+            elif each[0:7] == u'◎IMDb评分':
                 # IMDb评分
                 contentDir['IMDB_socre'] = each[9: len(each)]
-            elif each[0:5] == '◎豆瓣评分':
+            elif each[0:5] == u'◎豆瓣评分':
                 # 豆瓣评分
                 contentDir['douban_score'] = each[6: len(each)]
-            elif each[0:5] == '◎文件格式':
+            elif each[0:5] == u'◎文件格式':
                 # 文件格式
                 contentDir['format'] = each[6: len(each)]
-            elif each[0:5] == '◎视频尺寸':
+            elif each[0:5] == u'◎视频尺寸':
                 # 视频尺寸
                 contentDir['resolution'] = each[6: len(each)]
-            elif each[0:5] == '◎文件大小':
+            elif each[0:5] == u'◎文件大小':
                 # 文件大小
                 contentDir['size'] = each[6: len(each)]
-            elif each[0:5] == '◎片\u3000\u3000长':
+            elif each[0:5] == u'◎片　　长':
                 # 片长
                 contentDir['duration'] = each[6: len(each)]
-            elif each[0:5] == '◎导\u3000\u3000演':
+            elif each[0:5] == u'◎导　　演':
                 # 导演
                 contentDir['director'] = each[6: len(each)]
-            elif each[0:5] == '◎主\u3000\u3000演':
+            elif each[0:5] == u'◎主　　演':
                 # 主演
                 actor = each[6: len(each)]
+            elif each[0:2] == u'\u3000\u3000':
+                contentDir['desc'] = each
+                print each
 
         for item in content:
-            if item[0: 4] == '\u3000\u3000\u3000\u3000':
+            if item[0: 4] == u'\u3000\u3000\u3000\u3000':
                 actor = actor + '\n' + item[6: len(item)]
 
         # 主演
@@ -232,35 +236,44 @@ class dytt_Lastest(object):
         if imgs[1] != None:
             contentDir['screenshot'] = imgs[1]
         # 下载地址
-        ftp = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/td/table/tbody/tr/td/a/text()")
+        ftp = selector.xpath(
+            "//div[@class='co_content8']/ul/tr/td/div/td/table/tbody/tr/td/a/text()")
 
         # 为了兼容 2012 年前的页面
         if not len(ftp):
-            ftp = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/div/td/table/tbody/tr/td/font/a/text()")
+            ftp = selector.xpath(
+                "//div[@class='co_content8']/ul/tr/td/div/div/td/table/tbody/tr/td/font/a/text()")
 
         if not len(ftp):
-            ftp = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/div/td/table/tbody/tr/td/a/text()")
+            ftp = selector.xpath(
+                "//div[@class='co_content8']/ul/tr/td/div/div/td/table/tbody/tr/td/a/text()")
 
         if not len(ftp):
-            ftp = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/div/td/div/table/tbody/tr/td/font/a/text()")
+            ftp = selector.xpath(
+                "//div[@class='co_content8']/ul/tr/td/div/div/td/div/table/tbody/tr/td/font/a/text()")
 
         if not len(ftp):
-            ftp = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/td/div/table/tbody/tr/td/a/text()")
+            ftp = selector.xpath(
+                "//div[@class='co_content8']/ul/tr/td/div/td/div/table/tbody/tr/td/a/text()")
 
         if not len(ftp):
-            ftp = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/td/table/tbody/tr/td/a/text()")
+            ftp = selector.xpath(
+                "//div[@class='co_content8']/ul/tr/td/div/td/table/tbody/tr/td/a/text()")
 
         if not len(ftp):
             ftp = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/div/td/p/span/a/text()")
 
         if not len(ftp):
-            ftp = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/div/td/div/div/table/tbody/tr/td/font/a/text()")
+            ftp = selector.xpath(
+                "//div[@class='co_content8']/ul/tr/td/div/div/td/div/div/table/tbody/tr/td/font/a/text()")
 
         if not len(ftp):
-            ftp = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/div/td/span/table/tbody/tr/td/font/a/text()")
+            ftp = selector.xpath(
+                "//div[@class='co_content8']/ul/tr/td/div/div/td/span/table/tbody/tr/td/font/a/text()")
 
         if not len(ftp):
-            ftp = selector.xpath("//div[@class='co_content8']/ul/tr/td/div/div/td/div/span/div/table/tbody/tr/td/font/a/text()")
+            ftp = selector.xpath(
+                "//div[@class='co_content8']/ul/tr/td/div/div/td/div/span/div/table/tbody/tr/td/font/a/text()")
 
         contentDir['ftpurl'] = ftp[0]
         # 页面链接

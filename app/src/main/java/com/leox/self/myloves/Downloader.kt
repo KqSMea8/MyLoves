@@ -68,6 +68,7 @@ object Downloader {
                 XLDownloadManager.getInstance().startTask(taskAdded, false)
                 XLDownloadManager.getInstance().setTaskLxState(taskAdded, 0, 1)
                 XLDownloadManager.getInstance().startDcdn(taskAdded, 0, "", "", "")
+                startObserverService(taskAdded)
                 taskAdded
             }
         }

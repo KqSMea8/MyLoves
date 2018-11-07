@@ -8,6 +8,7 @@ from dytt8Moive import dytt_Lastest
 from RequestModel import RequestModel
 import requests
 from Utils import Utils
+import os
 
 '''
     程序主入口
@@ -36,8 +37,9 @@ def startSpider():
     infoListResult = []
     for url in floorlist:
         try:
-            response = requests.get(url, headers=RequestModel.getHeaders(), proxies=RequestModel.getProxies(),
-                                    timeout=3)
+            response = requests.get(url, headers=RequestModel.getHeaders(),
+                                    proxies=RequestModel.getProxies(),
+                                    timeout=3, verify=False)
             print(' 请求【 ' + url + ' 】的结果： ' + str(response.status_code))
 
             # 需将电影天堂的页面的编码改为 GBK, 不然会出现乱码的情况
@@ -55,8 +57,9 @@ def startSpider():
             print(e)
     for url in moviePageUrlListResult:
         try:
-            response = requests.get(url, headers=RequestModel.getHeaders(), proxies=RequestModel.getProxies(),
-                                    timeout=3)
+            response = requests.get(url, headers=RequestModel.getHeaders(),
+                                    proxies=RequestModel.getProxies(),
+                                    timeout=3, verify=False)
             print(' 请求【 ' + url + ' 】的结果： ' + str(response.status_code))
 
             # 需将电影天堂的页面的编码改为 GBK, 不然会出现乱码的情况
@@ -73,8 +76,12 @@ def startSpider():
 
 
 def insertData(infoList):
-    DBName = 'dytt.db'
-    db = sqlite3.connect('/data/data/com.leox.self.myloves/files/' + DBName, 10)
+    DBName = 'ldb'
+    directory_url = '/data/data/com.leox.self.myloves/databases'
+    if not os.path.exists(directory_url):
+        os.makedirs(directory_url)
+    file_url = directory_url + '/' + DBName
+    db = sqlite3.connect(file_url, 10)
     conn = db.cursor()
 
     SelectSql = 'Select * from sqlite_master where type = "table" and name="lastest_moive";'
@@ -83,14 +90,14 @@ def insertData(infoList):
             'm_id' INTEGER PRIMARY KEY,
             'm_type' varchar(100),
             'm_trans_name' varchar(200),
-            'm_name' varchar(100),
+            'm_name' varchar(100) unique,
             'm_decade' varchar(30),
-            'm_conutry' varchar(30),
+            'm_country' varchar(30),
             'm_level' varchar(100),
             'm_language' varchar(30),
             'm_subtitles' varchar(100),
             'm_publish' varchar(30),
-            'm_IMDB_socre' varchar(50),
+            'm_IMDB_score' varchar(50),
             'm_douban_score' varchar(50),
             'm_format' varchar(20),
             'm_resolution' varchar(20),
@@ -100,16 +107,17 @@ def insertData(infoList):
             'm_actors' varchar(1000),
             'm_placard' varchar(200),
             'm_screenshot' varchar(200),
-            'm_ftpurl' varchar(200),
-            'm_dytt8_url' varchar(200)
+            'm_ftp_url' varchar(200) unique,
+            'm_dytt8_url' varchar(200),
+            'm_desc' varchar(200)
         );
     '''
 
     InsertSql = '''
-        Insert into lastest_moive(m_type, m_trans_name, m_name, m_decade, m_conutry, m_level, m_language, m_subtitles, m_publish, m_IMDB_socre, 
-        m_douban_score, m_format, m_resolution, m_size, m_duration, m_director, m_actors, m_placard, m_screenshot, m_ftpurl,
-        m_dytt8_url)
-        values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        Insert into lastest_moive(m_type, m_trans_name, m_name, m_decade, m_country, m_level, m_language, m_subtitles, m_publish, m_IMDB_score, 
+        m_douban_score, m_format, m_resolution, m_size, m_duration, m_director, m_actors, m_placard, m_screenshot, m_ftp_url,
+        m_dytt8_url,m_desc)
+        values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?);
     '''
 
     if not conn.execute(SelectSql).fetchone():
@@ -121,10 +129,13 @@ def insertData(infoList):
 
     count = 1
     for item in infoList:
-        conn.execute(InsertSql, Utils.dirToList(item))
-        db.commit()
-        print('插入第 ' + str(count) + ' 条数据成功')
-        count = count + 1
+        try:
+            conn.execute(InsertSql, Utils.dirToList(item))
+            db.commit()
+            print('插入第 ' + str(count) + ' 条数据成功')
+            count = count + 1
+        except Exception as e:
+            print(e)
 
     db.commit()
     db.close()

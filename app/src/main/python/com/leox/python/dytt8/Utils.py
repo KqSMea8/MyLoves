@@ -36,4 +36,5 @@ class Utils(object):
         itemlist.append(item['screenshot'])
         itemlist.append(item['ftpurl'])
         itemlist.append(item['dytt8_url'])
+        itemlist.append(item['desc'])
         return itemlist

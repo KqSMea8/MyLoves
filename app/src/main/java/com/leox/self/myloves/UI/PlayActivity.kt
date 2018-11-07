@@ -28,6 +28,8 @@ class PlayActivity : BaseActivity(){
             }), 2012)
         }
         val url = intent.getStringExtra("url")
+        val name = intent.getStringExtra("name")
+        val image = intent.getStringExtra("image")
         Log.i(this.javaClass.simpleName,url)
         taskId = Downloader.addTask(url)
        // Downloader.addTask(url)
@@ -51,12 +53,12 @@ class PlayActivity : BaseActivity(){
                 }
             }
         })
-        playVideo(Downloader.obtainPlayUrl(url))
+        playVideo(Downloader.obtainPlayUrl(url),name,image)
     }
-    private fun playVideo(obtainPlayUrl: String) {
-        val jzDataSource = JZDataSource(obtainPlayUrl)
+    private fun playVideo(obtainPlayUrl: String, name: String, image: String) {
+        val jzDataSource = JZDataSource(obtainPlayUrl,name)
         video_std.setUp(jzDataSource, JzvdStd.SCREEN_WINDOW_NORMAL)
-        Glide.with(this).load("http://p.qpic.cn/videoyun/0/2449_43b6f696980311e59ed467f22794e792_1/640").into(video_std.thumbImageView)
+        Glide.with(this).load(image).into(video_std.thumbImageView)
     }
 
 

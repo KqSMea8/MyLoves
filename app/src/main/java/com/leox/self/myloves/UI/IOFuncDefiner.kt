@@ -1,7 +1,7 @@
 package com.leox.self.myloves.UI
 
 interface IOFuncDefiner{
-    fun requestData(params:List<Any>){}
+    fun requestData(vararg params:Any){}
     fun onResultBack(resultData:Any){}
     fun onFailed(e:Exception?){}
 }
