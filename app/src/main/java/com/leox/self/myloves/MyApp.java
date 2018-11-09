@@ -30,15 +30,14 @@ public class MyApp extends Application {
 
     @Override
     public String getPackageName() {
-        if (Log.getStackTraceString(new Throwable()).contains("com.xunlei.downloadlib")) {
+        if(Log.getStackTraceString(new Throwable()).contains("com.xunlei.downloadlib")) {
             return "com.xunlei.downloadprovider";
         }
         return super.getPackageName();
     }
-
     @Override
     public PackageManager getPackageManager() {
-        if (Log.getStackTraceString(new Throwable()).contains("com.xunlei.downloadlib")) {
+        if(Log.getStackTraceString(new Throwable()).contains("com.xunlei.downloadlib")) {
             return new DelegateApplicationPackageManager(super.getPackageManager());
         }
         return super.getPackageManager();

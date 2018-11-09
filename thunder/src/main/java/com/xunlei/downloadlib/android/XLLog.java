@@ -2,12 +2,16 @@ package com.xunlei.downloadlib.android;
 
 import android.os.Environment;
 import android.util.Log;
-
 import java.io.File;
 
 public class XLLog {
     private static LogConfig mLogConfig = null;
     private static XLLogInternal mXLLogInternal;
+
+    @Deprecated
+    public static boolean init(String str) {
+        return init();
+    }
 
     public static synchronized boolean init() {
         synchronized (XLLog.class) {
@@ -62,13 +66,11 @@ public class XLLog {
         if (logLevel == LogLevel.LOG_LEVEL_ERROR || (mLogConfig != null && mLogConfig.canLogToLogCat())) {
             obj = 1;
         }
-        String formatMessage = formatMessage(logLevel, str, str2);
-        Log.println(logLevel.getValue(), str, formatMessage);
         if (obj != null || mXLLogInternal != null) {
-//            String formatMessage = formatMessage(logLevel, str, str2);
-//            if (obj != null) {
-//                Log.println(logLevel.getValue(), str, formatMessage);
-//            }
+            String formatMessage = formatMessage(logLevel, str, str2);
+            if (obj != null) {
+                Log.println(logLevel.getValue(), str, formatMessage);
+            }
             if (mXLLogInternal != null) {
                 mXLLogInternal.log(logLevel, str, formatMessage);
             }

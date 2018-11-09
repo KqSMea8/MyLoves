@@ -76,6 +76,8 @@ object TableDytt {
         return arrayList
     }
 
-    data class MovieBean(val type: String, val name: String, val country: String, val language: String?
-                         , val IMDBScore: String?, val actors: String, val screenshot: String?, val ftpUrl: String, val dytt8Url: String?, val duration: String, val director: String, val placard: String, val desc: String) : Serializable
+    data class MovieBean(override val type: String, override val name: String, override val country: String, val language: String?
+                         , val IMDBScore: String?, override val actors: String, val screenshot: String?, val ftpUrl: String, val dytt8Url: String?, override val duration: String, override val director: String, override val placard: String, override val desc: String): DataBase(
+            type,  name, country, actors,  duration, director, placard, desc
+    )
 }

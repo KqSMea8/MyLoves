@@ -34,13 +34,13 @@ object Downloader {
     }
 
     fun obtainPlayUrl(url: String): String {
-        val loclUrl = XLTaskHelper.instance(MyApp.instance).getLoclUrl(obtainPath(url))
+        val loclUrl = XLTaskHelper.instance().getLoclUrl(obtainPath(url))
         Log.i("DownLoader", "playUrl:$loclUrl")
         return loclUrl
     }
 
     fun getFileName(url: String): String {
-        return XLTaskHelper.instance(MyApp.instance).getFileName(url)
+        return XLTaskHelper.instance().getFileName(url)
     }
 
     fun addTask(url: String): Long {
@@ -49,12 +49,12 @@ object Downloader {
             taskAdded == -1L -> {
                 //create task
                 val taskId = if (url.startsWith("magnet:?")) {
-                    XLTaskHelper.instance(MyApp.instance).addMagentTask(url, directoryPath, getFileName(url))
+                    XLTaskHelper.instance().addMagnetTask(url, directoryPath, getFileName(url))
                 } else if (url.startsWith("thunder://") || url.startsWith("ftp://") || url.startsWith("ed2k://") || url.startsWith("http")) {
                     //thunder:// ftp:// ed2k:// http:// https://
-                    XLTaskHelper.instance(MyApp.instance).addThunderTask(url, directoryPath, getFileName(url))
+                    XLTaskHelper.instance().addThunderTask(url, directoryPath, getFileName(url))
                 } else {
-                    XLTaskHelper.instance(MyApp.instance).addTorrentTask(url, directoryPath, intArrayOf(0))
+                    XLTaskHelper.instance().addTorrentTask(url, directoryPath, listOf())
                 }
                 addTaskInfoToDB(url, taskId)
                 startObserverService(taskId)
@@ -86,7 +86,7 @@ object Downloader {
     }
 
     fun getTaskInfo(taskId: Long): XLTaskInfo {
-        return XLTaskHelper.instance(MyApp.instance).getTaskInfo(taskId)
+        return XLTaskHelper.instance().getTaskInfo(taskId)
     }
 
 

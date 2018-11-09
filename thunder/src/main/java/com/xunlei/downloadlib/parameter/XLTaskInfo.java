@@ -2,7 +2,6 @@ package com.xunlei.downloadlib.parameter;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 
 public class XLTaskInfo implements Parcelable {
     public static final Creator<XLTaskInfo> CREATOR = new Creator<XLTaskInfo>() {
@@ -40,6 +39,10 @@ public class XLTaskInfo implements Parcelable {
     public int mQueryIndexStatus;
     public long mTaskId;
     public int mTaskStatus;
+    public String sourceUrl;// 下载地址
+    public String torrentPath;// 种子保存地址
+    public int index = -1;// 种子里相应文件序号
+    public long timestamp = -1;// 标记完成或者错误的时间戳
 
     public int describeContents() {
         return 0;
@@ -69,6 +72,10 @@ public class XLTaskInfo implements Parcelable {
         parcel.writeLong(this.mAdditionalResVipRecvBytes);
         parcel.writeLong(this.mAdditionalResPeerSpeed);
         parcel.writeLong(this.mAdditionalResPeerBytes);
+        parcel.writeString(this.sourceUrl);
+        parcel.writeString(this.torrentPath);
+        parcel.writeInt(this.index);
+        parcel.writeLong(this.timestamp);
     }
 
     public XLTaskInfo() {
@@ -98,5 +105,45 @@ public class XLTaskInfo implements Parcelable {
         this.mAdditionalResVipRecvBytes = parcel.readLong();
         this.mAdditionalResPeerSpeed = parcel.readLong();
         this.mAdditionalResPeerBytes = parcel.readLong();
+        this.sourceUrl = parcel.readString();
+        this.torrentPath = parcel.readString();
+        this.index = parcel.readInt();
+        this.timestamp = parcel.readLong();
+    }
+
+    @Override
+    public String toString() {
+        return "XLTaskInfo{" +
+                "mAddedHighSourceState=" + mAddedHighSourceState +
+                ", mAdditionalResCount=" + mAdditionalResCount +
+                ", mAdditionalResDCDNBytes=" + mAdditionalResDCDNBytes +
+                ", mAdditionalResDCDNSpeed=" + mAdditionalResDCDNSpeed +
+                ", mAdditionalResPeerBytes=" + mAdditionalResPeerBytes +
+                ", mAdditionalResPeerSpeed=" + mAdditionalResPeerSpeed +
+                ", mAdditionalResType=" + mAdditionalResType +
+                ", mAdditionalResVipRecvBytes=" + mAdditionalResVipRecvBytes +
+                ", mAdditionalResVipSpeed=" + mAdditionalResVipSpeed +
+                ", mCid='" + mCid + '\'' +
+                ", mDownloadSize=" + mDownloadSize +
+                ", mDownloadSpeed=" + mDownloadSpeed +
+                ", mErrorCode=" + mErrorCode +
+                ", mFileName='" + mFileName + '\'' +
+                ", mFileSize=" + mFileSize +
+                ", mGcid='" + mGcid + '\'' +
+                ", mInfoLen=" + mInfoLen +
+                ", mOriginRecvBytes=" + mOriginRecvBytes +
+                ", mOriginSpeed=" + mOriginSpeed +
+                ", mP2PRecvBytes=" + mP2PRecvBytes +
+                ", mP2PSpeed=" + mP2PSpeed +
+                ", mP2SRecvBytes=" + mP2SRecvBytes +
+                ", mP2SSpeed=" + mP2SSpeed +
+                ", mQueryIndexStatus=" + mQueryIndexStatus +
+                ", mTaskId=" + mTaskId +
+                ", mTaskStatus=" + mTaskStatus +
+                ", sourceUrl='" + sourceUrl + '\'' +
+                ", torrentPath='" + torrentPath + '\'' +
+                ", index=" + index +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }

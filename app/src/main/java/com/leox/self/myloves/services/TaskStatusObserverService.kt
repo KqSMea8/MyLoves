@@ -22,7 +22,7 @@ class TaskStatusObserverService : Service() {
             listeners.add(listener)
         }
 
-        fun remvoeListener(listener: ProgressListener) {
+        fun removeListener(listener: ProgressListener) {
             listeners.remove(listener)
         }
 

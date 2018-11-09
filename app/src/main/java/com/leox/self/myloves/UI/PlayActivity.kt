@@ -1,10 +1,8 @@
 package com.leox.self.myloves.UI
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import cn.jzvd.JZDataSource
 import cn.jzvd.Jzvd
 import cn.jzvd.JzvdStd
@@ -18,42 +16,62 @@ import kotlinx.android.synthetic.main.activity_play.*
 
 class PlayActivity : BaseActivity(){
     var taskId: Long = 0L
+    private val progressListener = object : ProgressListener {
+        override fun onStart(taskId: Long, downloaded: Long, sum: Long) {
+            if (taskId == this@PlayActivity.taskId) {
+                runOnUiThread {
+                    tvDownloadStatus.visibility = View.VISIBLE
+                    tvFileSize.visibility = View.VISIBLE
+                    tvDownloadStatus.text = tvDownloadStatus.text.subSequence(0, tvDownloadStatus.text.indexOf(":", 0, true) + 1).toString() + DataConvertUtils.convertFileSize(downloaded)
+                    tvFileSize.text = tvFileSize.text.subSequence(0, tvFileSize.text.indexOf(":") + 1).toString() + DataConvertUtils.convertFileSize(sum)
+                }
+            }
+        }
+
+        override fun onCompleted(taskId: Long) {
+            if (taskId == this@PlayActivity.taskId) {
+                runOnUiThread {
+                    tvDownloadStatus.visibility = View.VISIBLE
+                    tvFileSize.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        override fun onFailed(taskId: Long) {
+        }
+
+        override fun onProgress(taskId: Long, downloaded: Long, sum: Long) {
+            if (taskId == this@PlayActivity.taskId) {
+                runOnUiThread {
+                    tvDownloadStatus.visibility = View.VISIBLE
+                    tvFileSize.visibility = View.VISIBLE
+                    tvDownloadStatus.text = tvDownloadStatus.text.subSequence(0, tvDownloadStatus.text.indexOf(":", 0, true) + 1).toString() + DataConvertUtils.convertFileSize(downloaded)
+                    tvFileSize.text = tvFileSize.text.subSequence(0, tvFileSize.text.indexOf(":") + 1).toString() + DataConvertUtils.convertFileSize(sum)
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && PackageManager.PERMISSION_GRANTED != checkSelfPermission(Manifest.permission.READ_PHONE_STATE)) {
-            requestPermissions(Array<String>(1, init = {
-                Manifest.permission.READ_PHONE_STATE
-            }), 2012)
-        }
         val url = intent.getStringExtra("url")
         val name = intent.getStringExtra("name")
         val image = intent.getStringExtra("image")
         Log.i(this.javaClass.simpleName,url)
         taskId = Downloader.addTask(url)
        // Downloader.addTask(url)
-        TaskStatusObserverService.addListener(object : ProgressListener {
-            override fun onStart(taskId: Long, downloaded: Long, sum: Long) {
-
-            }
-
-            override fun onCompleted(taskId: Long) {
-            }
-
-            override fun onFailed(taskId: Long) {
-            }
-
-            override fun onProgress(taskId: Long, downloaded: Long, sum: Long) {
-                if (taskId == this@PlayActivity.taskId) {
-                    runOnUiThread {
-                        tvDownloadStatus.text = tvDownloadStatus.text.subSequence(0, tvDownloadStatus.text.indexOf(":", 0, true) + 1).toString() + DataConvertUtils.convertFileSize(downloaded)
-                        tvFileSize.text = tvFileSize.text.subSequence(0, tvFileSize.text.indexOf(":") + 1).toString() + DataConvertUtils.convertFileSize(sum)
-                    }
-                }
-            }
-        })
         playVideo(Downloader.obtainPlayUrl(url),name,image)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        TaskStatusObserverService.addListener(progressListener)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        TaskStatusObserverService.removeListener(progressListener)
     }
     private fun playVideo(obtainPlayUrl: String, name: String, image: String) {
         val jzDataSource = JZDataSource(obtainPlayUrl,name)

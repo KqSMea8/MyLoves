@@ -39,11 +39,12 @@ import java.util.List;
 
 public class DelegateApplicationPackageManager extends PackageManager {
     private static final String TAG = "DelegateApplicationPack";
-    private static final String realPackageName = BuildConfig.APPLICATION_ID;
+    private static final String realPackageName = "com.ghost.thunder.demo";
     PackageManager packageManager;
     public DelegateApplicationPackageManager(PackageManager packageManager) {
         this.packageManager = packageManager;
     }
+
 
     @Override
     public PackageInfo getPackageInfo(String packageName, int flags)
@@ -55,10 +56,9 @@ public class DelegateApplicationPackageManager extends PackageManager {
         return pi;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public PackageInfo getPackageInfo(VersionedPackage versionedPackage, int flags) throws NameNotFoundException {
-        return getPackageInfo(versionedPackage.getPackageName(),flags);
+    public PackageInfo getPackageInfo(VersionedPackage versionedPackage, int i) throws NameNotFoundException {
+        return null;
     }
 
     @Override
@@ -179,13 +179,13 @@ public class DelegateApplicationPackageManager extends PackageManager {
 
     @NonNull
     @Override
-    public List<SharedLibraryInfo> getSharedLibraries(int flags) {
+    public List<SharedLibraryInfo> getSharedLibraries(int i) {
         return null;
     }
 
     @Nullable
     @Override
-    public ChangedPackages getChangedPackages(int sequenceNumber) {
+    public ChangedPackages getChangedPackages(int i) {
         return null;
     }
 
@@ -280,7 +280,7 @@ public class DelegateApplicationPackageManager extends PackageManager {
     }
 
     @Override
-    public boolean isInstantApp(String packageName) {
+    public boolean isInstantApp(String s) {
         return false;
     }
 
@@ -301,7 +301,7 @@ public class DelegateApplicationPackageManager extends PackageManager {
     }
 
     @Override
-    public void updateInstantAppCookie(@Nullable byte[] cookie) {
+    public void updateInstantAppCookie(@Nullable byte[] bytes) {
 
     }
 
@@ -532,7 +532,7 @@ public class DelegateApplicationPackageManager extends PackageManager {
     }
 
     @Override
-    public void setApplicationCategoryHint(@NonNull String packageName, int categoryHint) {
+    public void setApplicationCategoryHint(@NonNull String s, int i) {
 
     }
 
