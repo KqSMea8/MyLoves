@@ -4,13 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="14dp"
-    android:paddingTop="5dp"
-    android:paddingRight="14dp"
-    android:paddingBottom="5dp"
     tools:context=".UI.MainActivity">
-
+    <include layout="@layout/toolbar"/>
     <RelativeLayout
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_area_title">
@@ -67,18 +65,20 @@
     </RelativeLayout>
 
     <GridView
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
         android:id="@+id/gv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/lightGray"
         android:cacheColorHint="#00000000"
-        android:columnWidth="90dp"
+        android:columnWidth="100dp"
         android:drawSelectorOnTop="false"
         android:fadeScrollbars="true"
         android:fadingEdge="none"
-        android:fadingEdgeLength="10dp"
+        android:fadingEdgeLength="0dp"
         android:fastScrollEnabled="true"
-        android:horizontalSpacing="0dp"
+        android:horizontalSpacing="10dp"
         android:listSelector="#00000000"
         android:numColumns="auto_fit"
         android:scrollbars="none"
@@ -87,18 +87,27 @@
         android:transcriptMode="alwaysScroll"
         android:verticalSpacing="0dp" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:background="@color/lightGray"
-        android:layout_marginTop="14dp"
-        android:layout_width="match_parent"
-        android:id="@+id/srl"
-        android:layout_height="match_parent">
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+        <!--android:background="@color/lightGray"-->
+        <!--android:layout_marginTop="14dp"-->
+        <!--android:id="@+id/srl"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_marginTop="14dp"
+            android:id="@+id/srl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
             android:id="@+id/rv"
             android:overScrollMode="never"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
 </LinearLayout>

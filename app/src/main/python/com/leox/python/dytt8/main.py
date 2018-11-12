@@ -114,7 +114,7 @@ def insertData(infoList):
     '''
 
     InsertSql = '''
-        Insert into lastest_moive(m_type, m_trans_name, m_name, m_decade, m_country, m_level, m_language, m_subtitles, m_publish, m_IMDB_score, 
+        Insert or replace into lastest_moive(m_type, m_trans_name, m_name, m_decade, m_country, m_level, m_language, m_subtitles, m_publish, m_IMDB_score, 
         m_douban_score, m_format, m_resolution, m_size, m_duration, m_director, m_actors, m_placard, m_screenshot, m_ftp_url,
         m_dytt8_url,m_desc)
         values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?);
@@ -128,6 +128,7 @@ def insertData(infoList):
         print('====  创建表失败, 表已经存在  ====')
 
     count = 1
+    infoList.reverse()
     for item in infoList:
         try:
             conn.execute(InsertSql, Utils.dirToList(item))

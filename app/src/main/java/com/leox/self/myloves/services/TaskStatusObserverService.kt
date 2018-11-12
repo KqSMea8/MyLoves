@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.*
 import com.leox.self.myloves.Downloader
 import com.leox.self.myloves.db.FieldStatus
-import com.leox.self.myloves.db.TableTask
+import com.leox.self.myloves.db.TaskDao
 
 class TaskStatusObserverService : Service() {
     private val binder: InnerBinder = InnerBinder()
@@ -43,7 +43,7 @@ class TaskStatusObserverService : Service() {
                             if (taskInfo.mDownloadSize == taskInfo.mFileSize) {
                                 listeners.forEach {
                                     it.onCompleted(taskId)
-                                    TableTask.updateDBTaskStatus(taskId,FieldStatus.TRUE, FieldStatus.IGNORE)
+                                    TaskDao.updateDBTaskStatus(taskId,FieldStatus.TRUE, FieldStatus.IGNORE)
                                 }
                             } else {
                                 if (msg.arg1 == TASK_START) {

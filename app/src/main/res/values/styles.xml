@@ -10,4 +10,16 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
+
+    <style name="line_title">
+        <item name="android:textColor">@color/lineTitle</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="line_desc">
+        <item name="android:textColor">@color/lineDesc</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <color name="lineTitle">#333333</color>
+    <color name="lineDesc" >#555555</color>
 </resources>

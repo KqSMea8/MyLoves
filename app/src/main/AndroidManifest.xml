@@ -30,6 +30,7 @@
         <activity android:name=".UI.PlayActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
+        <activity android:name=".UI.DownloadManageActivity" />
     </application>
 
 </manifest>

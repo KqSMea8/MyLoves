@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
@@ -27,12 +26,15 @@ import com.leox.self.myloves.R
 import com.leox.self.myloves.data.CollectionItem
 import com.leox.self.myloves.data.CollectionList
 import com.leox.self.myloves.db.DataBase
-import com.leox.self.myloves.db.TableDytt
-import com.leox.self.myloves.db.TableMjtt
+import com.leox.self.myloves.db.DyttDao
+import com.leox.self.myloves.db.MjttDao
 import com.leox.self.myloves.utils.SpUtils
+import com.scwang.smartrefresh.header.DropboxHeader
+import com.scwang.smartrefresh.layout.footer.BallPulseFooter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_rv_movie.view.*
 import kotlinx.android.synthetic.main.item_website.view.*
+import kotlinx.android.synthetic.main.toolbar.*
 
 
 class MainActivity : BaseActivity() {
@@ -47,18 +49,20 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        srl.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                refreshData()
-            }
+        srl.setRefreshHeader(DropboxHeader(this))
+        srl.setRefreshFooter(BallPulseFooter(this))
+        srl.setOnRefreshListener { refreshData() }
+        srl.setOnLoadMoreListener {
+            onResultBack(currentIndex)
+        }
+        toolbar_back.setOnClickListener {
+            finish()
+        }
 
-        })
+        initView()
     }
 
-
-    override fun onStart() {
-        super.onStart()
-        request4Permissions()
+    private fun initView() {
         val collectionList = CollectionList(ArrayList(mutableListOf(
                 CollectionItem(1, "http://www.dytt8.net", R.mipmap.ic_launcher, "电影天堂"),
                 CollectionItem(2, "http://www.baidu.com", R.mipmap.ic_launcher, "美剧天堂"),
@@ -82,6 +86,15 @@ class MainActivity : BaseActivity() {
             else
                 gv.visibility = View.VISIBLE
         }
+        if (currentIndex == -1) {
+            requestData(collections.list[0])
+        }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        request4Permissions()
     }
 
     private fun request4Permissions() {
@@ -110,7 +123,7 @@ class MainActivity : BaseActivity() {
                                 val uri = Uri.fromParts("package", getPackageName(), null)
                                 intent.data = uri
                                 startActivityForResult(intent, 2018)
-                            }
+                            }.show()
                     break
                 }
             }
@@ -147,19 +160,30 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private var currentIndex: Int = 1
-    override fun onResultBack(resultData: Any) {
-        if (resultData is Int) {
-            when (resultData) {
+    private var currentIndex: Int = -1
+    override fun onResultBack(vararg resultData: Any) {
+        if (resultData.isNotEmpty() && resultData[0] is Int) {
+            val isLoadMore = currentIndex == resultData[0]
+            val resultSize = if (isLoadMore) {
+                10 + listDatas.size
+            } else {
+                10
+            }
+            val startIndex = if (isLoadMore) {
+                listDatas.size
+            } else {
+                0
+            }
+            when (resultData[0]) {
                 1 -> {
-                    val movieList = TableDytt.getMovieList(10, 0)
+                    val movieList = DyttDao.getMovieList(resultSize, startIndex)
                     currentIndex = 1
-                    updateList(movieList)
+                    updateList(movieList, isLoadMore)
                 }
                 2 -> {
-                    val movieList = TableMjtt.getShowList(10, 0)
+                    val movieList = MjttDao.getShowList(resultSize, startIndex)
                     currentIndex = 2
-                    updateList(movieList)
+                    updateList(movieList, isLoadMore)
                 }
                 else -> {
                     Toast.makeText(this@MainActivity, "还没有实现呢", Toast.LENGTH_SHORT).show()
@@ -176,14 +200,14 @@ class MainActivity : BaseActivity() {
                     module.callAttr("startSpider")
                     Log.i(TAG, "requestData:Done")
                     onResultBack(1)
-                    srl.isRefreshing = false
+                    srl.finishRefresh()
                 }
                 2 -> {
                     val module = Python.getInstance().getModule("com.leox.python.mjtt.main")
                     module.callAttr("startSpider")
                     Log.i(TAG, "requestData:Done")
                     onResultBack(2)
-                    srl.isRefreshing = false
+                    srl.finishRefresh()
                 }
                 else -> {
                 }
@@ -191,13 +215,15 @@ class MainActivity : BaseActivity() {
         }.start()
     }
 
-    private fun updateList(movieList: ArrayList<out DataBase>) {
+    private fun updateList(movieList: ArrayList<out DataBase>, loadMore: Boolean) {
         runOnUiThread {
-            listDatas.clear()
+            if (!loadMore)
+                listDatas.clear()
             listDatas.addAll(movieList)
             rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             rv.swapAdapter(RecyclerListAdapter(this, listDatas), true)
         }
+        srl.finishLoadMore()
     }
 
 
@@ -263,9 +289,18 @@ class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     init {
         itemView.setOnClickListener {
-            if (data != null)
-                goPlayMovie(data!!)
+            if (data != null) {
+//                goPlayMovie(data!!)
+                showDetaile(data!!)
+            }
         }
+    }
+
+    private fun showDetaile(data: DataBase) {
+        val detailIntent = Intent(itemView.context, DetailActivity::class.java)
+        detailIntent.putExtra("data", Gson().toJson(data))
+        detailIntent.putExtra("isShow", data is MjttDao.ShowBean)
+        itemView.context.startActivity(detailIntent)
     }
 
     fun injectData(movieBean: DataBase) {
@@ -273,21 +308,5 @@ class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         Glide.with(itemView.context).load(movieBean.placard).into(itemView.iv)
         itemView.tv_desc.text = movieBean.desc
         data = movieBean
-    }
-
-    private fun goPlayMovie(movieList: DataBase) {
-        val playIntent = Intent(itemView.context, PlayActivity::class.java)
-        val ftpUrl: String = if (movieList is TableMjtt.ShowBean) {
-            movieList.ed2kUrls!![0]
-        } else if (movieList is TableDytt.MovieBean) {
-            movieList.ftpUrl
-        } else {
-            ""
-        }
-        Log.i("MainActivity", "ftpUrl:${ftpUrl}")
-        playIntent.putExtra("url", ftpUrl)
-        playIntent.putExtra("name", movieList.name)
-        playIntent.putExtra("image", movieList.placard)
-        itemView.context.startActivity(playIntent)
     }
 }

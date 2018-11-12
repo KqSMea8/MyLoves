@@ -52,11 +52,10 @@ def insertData(infoList):
     '''
 
     InsertSql = '''
-        Insert into mjtt(m_type, m_trans_name, m_name, m_decade, m_country,m_duration, m_director, m_actors, m_placard, m_ed2k_url,
+        Insert or replace into mjtt(m_type, m_trans_name, m_name, m_decade, m_country,m_duration, m_director, m_actors, m_placard, m_ed2k_url,
         m_magnet_url,m_desc)
         values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     '''
-
     if not conn.execute(SelectSql).fetchone():
         conn.execute(CreateTableSql)
         db.commit()
@@ -65,6 +64,7 @@ def insertData(infoList):
         print('====  创建表失败, 表已经存在  ====')
 
     count = 1
+    infoList.reverse()
     for item in infoList:
         try:
             conn.execute(InsertSql, Utils.dirToList(item))
@@ -76,4 +76,3 @@ def insertData(infoList):
 
     db.commit()
     db.close()
-

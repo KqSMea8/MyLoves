@@ -3,14 +3,12 @@ package com.leox.self.myloves
 import android.content.Intent
 import android.util.Log
 import com.leox.self.myloves.data.TaskInfo
-import com.leox.self.myloves.db.LocalDatabase
-import com.leox.self.myloves.db.TableTask
+import com.leox.self.myloves.db.TaskDao
 import com.leox.self.myloves.services.TaskStatusObserverService
 import com.xunlei.downloadlib.XLDownloadManager
 import com.xunlei.downloadlib.XLTaskHelper
 import com.xunlei.downloadlib.parameter.XLTaskInfo
 import java.io.File
-import java.sql.SQLException
 
 object Downloader {
     var directoryPath: String
@@ -44,7 +42,7 @@ object Downloader {
     }
 
     fun addTask(url: String): Long {
-        val taskAdded = TableTask.isTaskAdded(url)
+        val taskAdded = TaskDao.isTaskAdded(url)
         return when {
             taskAdded == -1L -> {
                 //create task
@@ -60,7 +58,7 @@ object Downloader {
                 startObserverService(taskId)
                 taskId
             }
-            TableTask.isTaskCompleted(url) -> taskAdded
+            TaskDao.isTaskCompleted(url) -> taskAdded
             else -> {
                 //startTask
                 XLDownloadManager.getInstance().setDownloadTaskOrigin(taskAdded, "out_app/out_app_paste")
@@ -82,7 +80,7 @@ object Downloader {
 
     private fun addTaskInfoToDB(url: String, taskId: Long) {
         val taskInfo = TaskInfo(getFileName(url), url, taskId)
-        TableTask.addTask(taskInfo)
+        TaskDao.addTask(taskInfo)
     }
 
     fun getTaskInfo(taskId: Long): XLTaskInfo {

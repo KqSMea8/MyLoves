@@ -1,5 +1,233 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_marginTop="14dp"
+                android:id="@+id/base_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/lightGray"
+                android:orientation="horizontal"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="120dp"
+                    android:layout_height="150dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/line_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="●片  名：" />
+
+                        <TextView
+                            android:id="@+id/name"
+                            style="@style/line_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="14dp"
+                            android:text="鹿鼎记" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/line_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="●译  名：" />
+
+                        <TextView
+                            android:id="@+id/name_translated"
+                            style="@style/line_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="14dp"
+                            android:text="鹿鼎记" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/line_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="●导  演：" />
+
+                        <TextView
+                            android:id="@+id/director"
+                            style="@style/line_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="14dp"
+                            android:text="周星驰" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/line_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="●演  员：" />
+
+                        <TextView
+                            android:id="@+id/actors"
+                            style="@style/line_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="3"
+                            android:ellipsize="end"
+                            android:layout_marginLeft="14dp"
+                            android:text="周星驰，周星驰，周星驰，周星驰，周星驰，周星驰，周星驰，周星驰，周星驰，周星驰，周星驰，周星驰，周星驰" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/line_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="●地  区：" />
+
+                        <TextView
+                            android:id="@+id/district"
+                            style="@style/line_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="14dp"
+                            android:text="香港" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/line_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="●发行时间：" />
+
+                        <TextView
+                            android:id="@+id/time"
+                            style="@style/line_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="14dp"
+                            android:text="2007-03-18" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/line_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="●类  型：" />
+
+                        <TextView
+                            android:id="@+id/type"
+                            style="@style/line_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="14dp"
+                            android:text="古装喜剧" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                style="@style/line_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:text="资源列表：" />
+
+            <GridView
+                android:id="@+id/gv"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/lightGray"
+                android:cacheColorHint="#00000000"
+                android:columnWidth="70dp"
+                android:drawSelectorOnTop="false"
+                android:fadeScrollbars="true"
+                android:fadingEdge="none"
+                android:fadingEdgeLength="10dp"
+                android:fastScrollEnabled="true"
+                android:horizontalSpacing="5dp"
+                android:listSelector="#00000000"
+                android:minHeight="150dp"
+                android:numColumns="auto_fit"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:scrollbars="vertical"
+                android:scrollbarStyle="insideInset"
+                android:stackFromBottom="false"
+                android:stretchMode="columnWidth"
+                android:transcriptMode="alwaysScroll"
+                android:verticalSpacing="5dp" />
+
+            <TextView
+                style="@style/line_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:text="简介：" />
+
+            <TextView
+                android:id="@+id/desc"
+                style="@style/line_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/lightGray"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:layout_marginBottom="14dp"
+                android:text="   一部搞笑的古装电影" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
