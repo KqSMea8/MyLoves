@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp" android:height="36dp" android:name="deleteVector" android:viewportHeight="1024.0" android:viewportWidth="1024.0">
+    <path android:fillColor="#333333"  android:pathData="M96 128h832v64H96zM128 256h768l-89.024 704H217.024zM384 64h256v96h-256z" />
+</vector>

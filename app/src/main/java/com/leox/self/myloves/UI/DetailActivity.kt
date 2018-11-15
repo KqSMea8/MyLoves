@@ -10,6 +10,7 @@ import android.widget.BaseAdapter
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import com.leox.self.myloves.Downloader
 import com.leox.self.myloves.R
 import com.leox.self.myloves.db.DataBase
 import com.leox.self.myloves.db.DyttDao
@@ -22,7 +23,7 @@ import java.io.Serializable
 class DetailActivity : BaseActivity() {
     private lateinit var data: DataBase
     private val urlList = ArrayList<ItemBean>()
-    private  var isShow: Boolean = false
+    private var isShow: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,11 +38,11 @@ class DetailActivity : BaseActivity() {
         toolbar_back.setOnClickListener {
             finish()
         }
-        isShow = intent.getBooleanExtra("isShow",false)
+        isShow = intent.getBooleanExtra("isShow", false)
         if (isShow) {
             data = Gson().fromJson(stringExtra, MjttDao.ShowBean::class.java)
-        }else{
-            data = Gson().fromJson(stringExtra,DyttDao.MovieBean::class.java)
+        } else {
+            data = Gson().fromJson(stringExtra, DyttDao.MovieBean::class.java)
         }
         toolbar_title.text = data.name
         initView()
@@ -75,6 +76,16 @@ class DetailActivity : BaseActivity() {
 }
 
 class DetailGVAdaper(private val collections: ArrayList<ItemBean>) : BaseAdapter() {
+    init {
+        val iterator = collections.iterator()
+        while (iterator.hasNext()) {
+            val next = iterator.next()
+            if (TextUtils.isEmpty(next.url)) {
+                collections.remove(next)
+            }
+        }
+    }
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val holder: ItemHolder = if (convertView == null) {
             ItemHolder(parent!!)
@@ -118,11 +129,17 @@ class DetailGVAdaper(private val collections: ArrayList<ItemBean>) : BaseAdapter
         }
 
         private fun goPlay(itemData: ItemBean) {
-            val playIntent = Intent(contentView.context, PlayActivity::class.java)
+            if (TextUtils.isEmpty(itemData.url)) {
+                Toast.makeText(contentView.context, "节目还没有更新", Toast.LENGTH_SHORT).show()
+                return
+            }
+            Downloader.addTask(itemData.url)
+            val playIntent = Intent(contentView.context, DownloadManageActivity::class.java)
             playIntent.putExtra("url", itemData.url)
             playIntent.putExtra("name", itemData.showName + ":" + itemData.name)
             playIntent.putExtra("image", itemData.placard)
             contentView.context.startActivity(playIntent)
+
         }
     }
 }

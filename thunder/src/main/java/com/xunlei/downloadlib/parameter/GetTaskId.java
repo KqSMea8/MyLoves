@@ -6,4 +6,8 @@ public class GetTaskId {
     public long getTaskId() {
         return this.mTaskId;
     }
+
+    public void setTaskId(long currentTaskId) {
+        mTaskId = currentTaskId;
+    }
 }
