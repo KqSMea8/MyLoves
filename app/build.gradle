@@ -26,7 +26,8 @@ android {
         python {
             version "2.7.15"
             buildPython "py -2.7"
-            buildPython "D:\\Python27\\python.exe"
+//            buildPython "D:\\Python27\\python.exe"
+            buildPython "/volumes/mac/library/frameworks/python.framework/versions/2.7/bin/python2.7"
 //            // Android UI demo
 //            pip {
 //                install "Pygments==2.2.0"   // Also used in Java API demo
