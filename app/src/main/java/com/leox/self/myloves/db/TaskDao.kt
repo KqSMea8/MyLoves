@@ -1,6 +1,7 @@
 package com.leox.self.myloves.db
 
-import com.leox.self.myloves.data.TaskInfo
+import android.content.ContentValues
+import java.io.Serializable
 import java.sql.SQLException
 
 object TaskDao {
@@ -85,5 +86,55 @@ object TaskDao {
             rawQuery.close()
         }
         return result
+    }
+
+    fun getTaskInfos(): Pair<ArrayList<TaskInfo>, ArrayList<TaskInfo>> {
+        val completedList = arrayListOf<TaskInfo>()
+        val unCompletedList = arrayListOf<TaskInfo>()
+        val rawQuery = LocalDatabase.readableDatabase.rawQuery("select * from $NAME", null)
+        while (rawQuery?.moveToNext() == true) {
+            val temp = TaskInfo(rawQuery.getString(rawQuery.getColumnIndex(TASK_FILENAME)),
+                    rawQuery.getString(rawQuery.getColumnIndex(TASK_URL)),
+                    rawQuery.getLong(rawQuery.getColumnIndex(TASK_ID)),
+                    rawQuery.getInt(rawQuery.getColumnIndex(TASK_ISCOMPLETED)) != 0,
+                    rawQuery.getInt(rawQuery.getColumnIndex(TASK_ISPLAYED)) != 0,
+                    rawQuery.getLong(rawQuery.getColumnIndex(TASK_CREATETIME))
+            )
+            if (temp.isCompleted) {
+                completedList.add(temp)
+            } else {
+                unCompletedList.add(temp)
+            }
+        }
+        rawQuery.close()
+        return Pair(unCompletedList, completedList)
+    }
+
+    fun deleteTask(taskId: Long):Int {
+        return LocalDatabase.writableDatabase.delete(NAME, "$TASK_ID = ?", arrayOf("" + taskId))
+    }
+
+    fun removeUnCompletedTask(first: ArrayList<TaskInfo>) {
+        val writableDatabase = LocalDatabase.writableDatabase
+        first.forEach {
+            writableDatabase.delete(NAME,"$TASK_URL = ?", arrayOf(it.url))
+        }
+    }
+
+
+    data class TaskInfo(val fileName: String, val url: String, val taskId: Long, var isCompleted: Boolean, var isPlayed: Boolean, val createTime: Long) : Serializable {
+        constructor(fileName: String, url: String, taskId: Long) : this(fileName, url, taskId, false, false, System.currentTimeMillis())
+
+        fun convertBeanToValuesOfTask(): ContentValues {
+            val values = ContentValues()
+            values.put(TaskDao.TASK_ID, taskId)
+            values.put(TaskDao.TASK_URL, url)
+            values.put(TaskDao.TASK_ISCOMPLETED, isCompleted)
+            values.put(TaskDao.TASK_ISPLAYED, isPlayed)
+            values.put(TaskDao.TASK_FILENAME, fileName)
+            values.put(TaskDao.TASK_CREATETIME, createTime)
+            return values
+        }
+
     }
 }
