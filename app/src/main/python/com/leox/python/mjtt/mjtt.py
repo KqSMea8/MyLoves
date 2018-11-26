@@ -7,8 +7,8 @@ from RequestModel import RequestModel
 
 
 class Latest_100_Show(object):
-    start_url = 'http://www.meijutt.com/new100.html'
-    base_url = 'http://www.meijutt.com'
+    start_url = 'https://www.meijutt.com/new100.html'
+    base_url = 'https://www.meijutt.com'
 
     def __init__(self):
         self.max_size = 100
