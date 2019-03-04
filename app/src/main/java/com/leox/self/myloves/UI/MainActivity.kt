@@ -63,6 +63,8 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initView() {
+        rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        rv.swapAdapter(RecyclerListAdapter(this, listDatas), true)
         val collectionList = CollectionList(ArrayList(mutableListOf(
                 CollectionItem(1, "http://www.dytt8.net", R.mipmap.ic_launcher, "电影天堂"),
                 CollectionItem(2, "http://www.baidu.com", R.mipmap.ic_launcher, "美剧天堂"),
@@ -221,8 +223,7 @@ class MainActivity : BaseActivity() {
             if (!loadMore)
                 listDatas.clear()
             listDatas.addAll(movieList)
-            rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-            rv.swapAdapter(RecyclerListAdapter(this, listDatas), true)
+            rv.adapter.notifyDataSetChanged()
         }
         srl.finishLoadMore()
     }
