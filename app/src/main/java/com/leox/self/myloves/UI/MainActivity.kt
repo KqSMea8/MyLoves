@@ -216,6 +216,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun updateList(movieList: ArrayList<out DataBase>, loadMore: Boolean) {
+        //TODO fix scroll to start problem
         runOnUiThread {
             if (!loadMore)
                 listDatas.clear()

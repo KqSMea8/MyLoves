@@ -64,7 +64,7 @@ class RequestModel(object):
         proxies = {
             # 'http': random.choice(cls.Proxy_Pool),
             # 'http': '39.137.69.10:80'
-            'http': '39.135.24.12:8080'
+            # 'http': '39.135.24.12:8080'
             # 'https': random.choice(cls.Proxy_Pool)
         }
         return proxies

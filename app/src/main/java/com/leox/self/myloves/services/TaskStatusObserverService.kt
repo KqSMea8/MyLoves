@@ -20,7 +20,7 @@ class TaskStatusObserverService : Service() {
         val TASK_UPDATE = 0x2011
         val TASK_START = 0x1001
         val TASK_ID = "TASK_ID"
-        val ACTION_REMOVE_MESSAGE = "com.leox.self.myloves.action_remove_message"
+        val ACTION_REMOVE_MESSAGE = "com.leox.project.freeshow.action_remove_message"
         private val listeners: ArrayList<ProgressListener> by lazy {
             ArrayList<ProgressListener>()
         }

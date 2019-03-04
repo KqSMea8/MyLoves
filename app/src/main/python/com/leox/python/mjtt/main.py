@@ -24,7 +24,7 @@ def startSpider():
 
 def insertData(infoList):
     DBName = 'ldb'
-    directory_url = '/data/data/com.leox.self.myloves/databases'
+    directory_url = '/data/data/com.leox.project.freeshow/databases'
     # directory_url = 'C:\Users\Administrator\Desktop\MoivesSpider-master\mjtt'
     if not os.path.exists(directory_url):
         os.makedirs(directory_url)

@@ -77,7 +77,7 @@ def startSpider():
 
 def insertData(infoList):
     DBName = 'ldb'
-    directory_url = '/data/data/com.leox.self.myloves/databases'
+    directory_url = '/data/data/com.leox.project.freeshow/databases'
     if not os.path.exists(directory_url):
         os.makedirs(directory_url)
     file_url = directory_url + '/' + DBName
